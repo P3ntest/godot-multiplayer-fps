@@ -1,0 +1,163 @@
+[gd_scene load_steps=19 format=3 uid="uid://cl0f1iyr1bosm"]
+
+[ext_resource type="Script" path="res://player/player.gd" id="1_to78d"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8lubt"]
+
+[sub_resource type="Animation" id="Animation_drp4l"]
+length = 0.001
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 1.8, 0)
+
+[sub_resource type="Animation" id="Animation_htdmh"]
+resource_name = "head_bob"
+loop_mode = 1
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 1.8, 0, 0.25, 1, 0, 1.9, 0, 0.75, 1, 0, 1.7, 0)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_47dxr"]
+_data = {
+"RESET": SubResource("Animation_drp4l"),
+"head_bob": SubResource("Animation_htdmh")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ymcj1"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ogovs"]
+animation = &"RESET"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8f5kq"]
+animation = &"head_bob"
+
+[sub_resource type="AnimationNodeAdd2" id="AnimationNodeAdd2_t8gl2"]
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_qj0q8"]
+
+[sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_vsxmp"]
+xfade_time = 0.1
+input_0/name = "bob"
+input_0/auto_advance = false
+input_0/break_loop_at_end = false
+input_0/reset = true
+input_1/name = "idle"
+input_1/auto_advance = false
+input_1/break_loop_at_end = false
+input_1/reset = true
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_hvp7e"]
+graph_offset = Vector2(-289.17, -60.1934)
+nodes/RESET_ANIM/node = SubResource("AnimationNodeAnimation_ogovs")
+nodes/RESET_ANIM/position = Vector2(-210, 100)
+"nodes/RESET_ANIM 2/node" = SubResource("AnimationNodeAnimation_ymcj1")
+"nodes/RESET_ANIM 2/position" = Vector2(200, 340)
+nodes/bob_anim/node = SubResource("AnimationNodeAnimation_8f5kq")
+nodes/bob_anim/position = Vector2(-200, 250)
+nodes/bob_intensity/node = SubResource("AnimationNodeAdd2_t8gl2")
+nodes/bob_intensity/position = Vector2(-30, 150)
+nodes/bob_speed/node = SubResource("AnimationNodeTimeScale_qj0q8")
+nodes/bob_speed/position = Vector2(200, 160)
+nodes/bob_trans/node = SubResource("AnimationNodeTransition_vsxmp")
+nodes/bob_trans/position = Vector2(430, 100)
+nodes/output/position = Vector2(670, 110)
+node_connections = [&"bob_intensity", 0, &"RESET_ANIM", &"bob_intensity", 1, &"bob_anim", &"bob_speed", 0, &"bob_intensity", &"bob_trans", 0, &"bob_speed", &"bob_trans", 1, &"RESET_ANIM 2", &"output", 0, &"bob_trans"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_y8udg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xd48m"]
+albedo_color = Color(3.00817e-08, 0.132187, 0.155272, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r0eep"]
+size = Vector3(0.41, 0.15, 0.16)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5xnyd"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:player_color")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:health")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6qr0w"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_kfy6a"]
+font_size = 60
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_to78d")
+player_color = null
+health = null
+
+[node name="PhysicsCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_8lubt")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+fov = 90.0
+
+[node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D"]
+target_position = Vector3(0, 0, -20)
+collision_mask = 2
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Head"]
+libraries = {
+"": SubResource("AnimationLibrary_47dxr")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="Head"]
+tree_root = SubResource("AnimationNodeBlendTree_hvp7e")
+anim_player = NodePath("../AnimationPlayer")
+parameters/bob_intensity/add_amount = 0.5
+parameters/bob_speed/scale = 1.0
+parameters/bob_trans/current_state = "idle"
+parameters/bob_trans/transition_request = ""
+parameters/bob_trans/current_index = 1
+
+[node name="VisualBody" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Pill" type="MeshInstance3D" parent="VisualBody"]
+mesh = SubResource("CapsuleMesh_y8udg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VisualBody/Pill"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.591999, -0.480948)
+material_override = SubResource("StandardMaterial3D_xd48m")
+mesh = SubResource("BoxMesh_r0eep")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_5xnyd")
+
+[node name="Hitbox" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0734844, 1, -0.0327368)
+collision_layer = 2
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
+shape = SubResource("CapsuleShape3D_6qr0w")
+
+[node name="Stats" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Speed: 20"
+label_settings = SubResource("LabelSettings_kfy6a")
