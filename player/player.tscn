@@ -1,6 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://cl0f1iyr1bosm"]
+[gd_scene load_steps=23 format=3 uid="uid://cl0f1iyr1bosm"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_to78d"]
+[ext_resource type="PackedScene" uid="uid://cpkkip450jgku" path="res://player/view_model.tscn" id="2_18a0a"]
+[ext_resource type="PackedScene" uid="uid://c52jjqt4g0gvh" path="res://prefabs/decal.tscn" id="2_t8vjb"]
+[ext_resource type="AudioStream" uid="uid://6uruqc27sqa3" path="res://assets/Sniper_Rifle-Kibblesbob-2053709564.mp3" id="4_nftpu"]
+[ext_resource type="Texture2D" uid="uid://bb7bdpp0ptp2m" path="res://assets/crosshair.png" id="4_nwhd6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8lubt"]
 
@@ -100,8 +104,7 @@ font_size = 60
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_to78d")
-player_color = null
-health = null
+decal_instance = ExtResource("2_t8vjb")
 
 [node name="PhysicsCollider" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -112,12 +115,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
 fov = 90.0
+near = 0.001
 
-[node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D"]
-target_position = Vector3(0, 0, -20)
+[node name="PlayerHitCast" type="RayCast3D" parent="Head/Camera3D"]
+target_position = Vector3(0, 0, -1000)
 collision_mask = 2
 collide_with_areas = true
 collide_with_bodies = false
+
+[node name="DecalHitCast" type="RayCast3D" parent="Head/Camera3D"]
+target_position = Vector3(0, 0, -1000)
+
+[node name="view_model_camera" parent="Head/Camera3D" instance=ExtResource("2_18a0a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0742994, -0.0566131, -0.137094)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Head"]
 libraries = {
@@ -132,6 +142,10 @@ parameters/bob_speed/scale = 1.0
 parameters/bob_trans/current_state = "idle"
 parameters/bob_trans/transition_request = ""
 parameters/bob_trans/current_index = 1
+
+[node name="ShotSound" type="AudioStreamPlayer3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.8, 0)
+stream = ExtResource("4_nftpu")
 
 [node name="VisualBody" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -156,8 +170,36 @@ monitoring = false
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
 shape = SubResource("CapsuleShape3D_6qr0w")
 
-[node name="Stats" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="Hud" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Stats" type="Label" parent="Hud"]
+layout_mode = 0
+offset_right = 278.0
+offset_bottom = 83.0
 text = "Speed: 20"
 label_settings = SubResource("LabelSettings_kfy6a")
+
+[node name="TextureRect" type="TextureRect" parent="Hud"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.4, 0.4)
+pivot_offset = Vector2(64, 64)
+texture = ExtResource("4_nwhd6")
+expand_mode = 1

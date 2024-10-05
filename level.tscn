@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://d05vox6t3j0e"]
+[gd_scene load_steps=4 format=3 uid="uid://d05vox6t3j0e"]
 
 [ext_resource type="Material" uid="uid://dytsioi8mumie" path="res://resources/materials/floor.tres" id="1_1u1e4"]
 [ext_resource type="Material" uid="uid://dvmws7gxbsmj8" path="res://resources/materials/box.tres" id="2_yu325"]
+[ext_resource type="PackedScene" uid="uid://c52jjqt4g0gvh" path="res://prefabs/decal.tscn" id="3_q0jto"]
 
 [node name="Node3D" type="Node3D"]
 
@@ -83,3 +84,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.1072, 9.28872, -16.8104)
 material_override = ExtResource("1_1u1e4")
 use_collision = true
 size = Vector3(49.7627, 66.5225, 2.01453)
+
+[node name="Decal" parent="." instance=ExtResource("3_q0jto")]
+transform = Transform3D(1, 0, 0, 0, 0.252593, -0.967573, 0, 0.967573, 0.252593, 53.8896, 0.445385, -15.2757)
+
+[node name="Spawns" type="Node3D" parent="."]
+
+[node name="Spawn" type="Marker3D" parent="Spawns" groups=["PlayerSpawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.7286, 2.01771, 8.30115)
+gizmo_extents = 1.0
+
+[node name="Spawn2" type="Marker3D" parent="Spawns" groups=["PlayerSpawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.4164, 2.01771, 8.41466)
+gizmo_extents = 1.0
+
+[node name="Spawn3" type="Marker3D" parent="Spawns" groups=["PlayerSpawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.239861, 0.507528, -2.34193)
+gizmo_extents = 1.0

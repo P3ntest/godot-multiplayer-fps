@@ -59,6 +59,7 @@ func _add_player(id = 1):
 	player.player_color = PLAYER_COLORS[multiplayer.get_peers().size()]
 
 	$Node3D/Players.add_child(player)
+	player.spawn.rpc()
 
 
 func _on_connect_pressed():

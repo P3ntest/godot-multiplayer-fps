@@ -7,9 +7,31 @@ const MOUSE_SENSITIVITY = 0.001
 
 @export var player_color: Color = Color.WHITE
 
-@onready var raycast = $Head/Camera3D/RayCast3D
+@onready var player_raycast = $Head/Camera3D/PlayerHitCast
+@onready var decal_raycast = $Head/Camera3D/DecalHitCast
+
 
 @export var health = 100
+
+@export var decal_instance: PackedScene
+
+var spawn_cooldown = 0
+
+func die_local():
+	die.rpc()
+	spawn_cooldown = 3
+
+@rpc("any_peer", "reliable", "call_local")
+func die():
+	visible = false
+
+@rpc("any_peer", "reliable", "call_local")
+func spawn():
+	var spawn_point = get_tree().get_nodes_in_group("PlayerSpawn").pick_random()
+	transform.origin = spawn_point.transform.origin
+	visible = true
+	health = 100
+
 
 var peer_id = 0
 
@@ -33,32 +55,60 @@ func _ready():
 		# Disable the camera for other players.
 		$Head/Camera3D.current = false
 		$VisualBody.visible = true
+		$Hud.visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not is_multiplayer_authority():
+		return
+	if health <= 0:
+		return
 	if event is InputEventMouseMotion:
 		if is_multiplayer_authority():
 			rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 			$Head.rotation.x = clamp($Head.rotation.x -event.relative.y * MOUSE_SENSITIVITY, -PI / 2, PI / 2)
 
+@onready var shot_sound_player: AudioStreamPlayer3D = $Head/ShotSound
+
+# Function to play sound
 @rpc("any_peer", "reliable", "call_local")
 func on_shot():
 	print("boom")
+	shot_sound_player.play()
+
+# spawn decal
+# @rpc("any_peer", "reliable", "call_local")
+# func spawn_decal(hit_pos: Vector3, hit_normal: Vector3):
+# 	var decal: Decal = decal_instance.instantiate()
+# 	decal.transform.origin = hit_pos
+# 	get_tree().root.add_child(decal)
+# 	decal.look_at(hit_pos + hit_normal, Vector3.UP)
+# 	print("decal")
 
 @rpc("any_peer", "reliable", "call_local")
 func on_hit_me(by_peer_id: int):
 	print("I " + str(peer_id) + " was hit " + str(by_peer_id))
-	health -= 20
+	health -= 100
+	if health <= 0:
+		die_local()
 
 func shoot():
 	on_shot.rpc()
 
-	if (raycast.is_colliding()):
-		print("Raycast hit: ", raycast.get_collider())
-		var hit_collider: Area3D = raycast.get_collider()
-		var hit_player: Player = hit_collider.get_parent()
-		if hit_player:
-			print ("I " + str(peer_id) + " hit " + str(hit_player.peer_id))
-			hit_player.on_hit_me.rpc_id(hit_player.peer_id, peer_id)
+	if (player_raycast.is_colliding()):
+		print("hit player")
+		if decal_raycast.is_colliding() and decal_raycast.get_collision_point().distance_to(transform.origin) + 2 < player_raycast.get_collision_point().distance_to(transform.origin):
+			# we hit a wall first
+			print("hit wall first")
+			print("wall: ", decal_raycast.get_collider())
+			pass
+		else:
+			print("Raycast hit: ", player_raycast.get_collider())
+			var hit_collider: Area3D = player_raycast.get_collider()
+			var hit_player: Player = hit_collider.get_parent()
+			if hit_player:
+				print ("I " + str(peer_id) + " hit " + str(hit_player.peer_id))
+				hit_player.on_hit_me.rpc_id(hit_player.peer_id, peer_id)
+	print("missed")
 
 @onready var head_bobbing_anim_tree = $Head/AnimationTree
 
@@ -77,12 +127,23 @@ var cayote_time_wall = 0
 var bhob_window = 0
 var bhob_speed = 0
 var wall_jump_cooldown = 0
+
+var shoot_cooldown = 0
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
 
-	if (Input.is_action_just_pressed("fire")):
+	if (spawn_cooldown > 0):
+		spawn_cooldown -= delta
+		$Hud/Stats.text = "Respawning in " + str(snapped(spawn_cooldown, .01))
+		if (spawn_cooldown <= 0):
+			spawn.rpc()
+		return
+
+	shoot_cooldown -= delta
+	if (Input.is_action_just_pressed("fire") and shoot_cooldown <= 0):
 		shoot()
+		shoot_cooldown = 1
 
 	# Add the gravity.
 	if not is_on_floor():
@@ -173,4 +234,4 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	$Stats.text = "Speed: " + str( snapped(h_vec(velocity).length(), .01)) + "\n" + "Bhob-Speed: " + str(snapped(bhob_speed, .01) if can_bhop else "-") + "\n"
+	$Hud/Stats.text = "Speed: " + str( snapped(h_vec(velocity).length(), .01)) + "\n" + "Bhob-Speed: " + str(snapped(bhob_speed, .01) if can_bhop else "-") + "\n" + "Health: " + str(health)
