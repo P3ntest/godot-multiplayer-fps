@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://multiplayer.gd" id="1_7k4sc"]
 [ext_resource type="PackedScene" uid="uid://cl0f1iyr1bosm" path="res://player/player.tscn" id="2_6cu6h"]
-[ext_resource type="PackedScene" uid="uid://d05vox6t3j0e" path="res://level.tscn" id="3_o82i2"]
+[ext_resource type="PackedScene" uid="uid://d05vox6t3j0e" path="res://levels/movement.tscn" id="3_o82i2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_h8bja"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -37,21 +37,29 @@ offset_right = 137.345
 offset_bottom = -15.438
 scale = Vector2(4, 4)
 
-[node name="Options" type="HBoxContainer" parent="Control/Net"]
+[node name="Host" type="HBoxContainer" parent="Control/Net"]
 layout_mode = 2
 
-[node name="Host" type="Button" parent="Control/Net/Options"]
+[node name="Port" type="LineEdit" parent="Control/Net/Host"]
+layout_mode = 2
+text = "4433"
+placeholder_text = "Port"
+
+[node name="Host" type="Button" parent="Control/Net/Host"]
 layout_mode = 2
 text = "Host"
 
-[node name="Connect" type="Button" parent="Control/Net/Options"]
+[node name="Connect" type="HBoxContainer" parent="Control/Net"]
 layout_mode = 2
-text = "Connect"
 
-[node name="Remote" type="TextEdit" parent="Control/Net/Options"]
+[node name="Remote" type="LineEdit" parent="Control/Net/Connect"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "127.0.0.1"
+
+[node name="Connect" type="Button" parent="Control/Net/Connect"]
+layout_mode = 2
+text = "Connect"
 
 [node name="Node3D" type="Node3D" parent="."]
 
@@ -71,5 +79,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.68175, 0)
 _spawnable_scenes = PackedStringArray("res://player/player.tscn")
 spawn_path = NodePath("../Node3D/Players")
 
-[connection signal="pressed" from="Control/Net/Options/Host" to="." method="_on_host_pressed"]
-[connection signal="pressed" from="Control/Net/Options/Connect" to="." method="_on_connect_pressed"]
+[connection signal="pressed" from="Control/Net/Host/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Control/Net/Connect/Connect" to="." method="_on_connect_pressed"]

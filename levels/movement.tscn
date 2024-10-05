@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3 uid="uid://d05vox6t3j0e"]
+
+[ext_resource type="Material" uid="uid://dytsioi8mumie" path="res://resources/materials/floor.tres" id="1_1u1e4"]
+[ext_resource type="Material" uid="uid://dvmws7gxbsmj8" path="res://resources/materials/box.tres" id="2_yu325"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Floor2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00221825, 0.00752783, -0.00922969)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(20, 1, 20)
+
+[node name="Floor3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.4987, 0.00752783, -22.3226)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(5, 1, 5)
+
+[node name="Floor4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.7477, 0.00752783, -39.2979)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(5, 1, 5)
+
+[node name="Floor5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.81105, 0.00752783, -59.1966)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(5, 1, 5)
+
+[node name="Floor6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.3536, 0.00752783, -17.8224)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(5, 1, 5)
+
+[node name="Floor7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.6345, 11.5969, -28.7295)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(5, 24.1787, 5)
+
+[node name="Wall2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55.9367, 4.48146, 15.8117)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(77.8164, 6.79285, 2.01453)
+
+[node name="Wall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00221825, 2.90395, 8.98351)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(20, 6.79285, 2.01453)
+
+[node name="Ramp" type="CSGPolygon3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.47893, -0.434819, 5.72486)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+polygon = PackedVector2Array(0, 0, -0.402638, 0.707814, 5.78978, 2.54307, 9.42806, 2.31216)
+depth = 5.0
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 74.7908, 1.51771, 7.4865)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(118.286, 1, 20)
+
+[node name="Box2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.927027, 0, 0.374995, 0, 1, 0, -0.374995, 0, 0.927027, 22.5375, 2.50918, 7.78089)
+material_override = ExtResource("2_yu325")
+use_collision = true
+size = Vector3(2, 1.88, 2)
+
+[node name="Box" type="CSGBox3D" parent="."]
+transform = Transform3D(0.983166, 0, -0.182716, 0, 1, 0, 0.182716, 0, 0.983166, 24.3681, 3.37778, 6.04209)
+material_override = ExtResource("2_yu325")
+use_collision = true
+size = Vector3(2, 3, 2)
+
+[node name="Wall3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.1072, 9.28872, -16.8104)
+material_override = ExtResource("1_1u1e4")
+use_collision = true
+size = Vector3(49.7627, 66.5225, 2.01453)
+
+[node name="Spawns" type="Node3D" parent="."]
+
+[node name="Spawn" type="Marker3D" parent="Spawns" groups=["PlayerSpawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.7286, 2.01771, 8.30115)
+gizmo_extents = 1.0
+
+[node name="Spawn2" type="Marker3D" parent="Spawns" groups=["PlayerSpawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.4164, 2.01771, 8.41466)
+gizmo_extents = 1.0
+
+[node name="Spawn3" type="Marker3D" parent="Spawns" groups=["PlayerSpawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.239861, 0.507528, -2.34193)
+gizmo_extents = 1.0

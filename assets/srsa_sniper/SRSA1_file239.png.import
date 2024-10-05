@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bns5kw46wpndg"
 path.s3tc="res://.godot/imported/SRSA1_file239.png-657714666d10e9d7c28fac5de4796054.s3tc.ctex"
+path.etc2="res://.godot/imported/SRSA1_file239.png-657714666d10e9d7c28fac5de4796054.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/srsa_sniper/SRSA1_file239.png"
-dest_files=["res://.godot/imported/SRSA1_file239.png-657714666d10e9d7c28fac5de4796054.s3tc.ctex"]
+dest_files=["res://.godot/imported/SRSA1_file239.png-657714666d10e9d7c28fac5de4796054.s3tc.ctex", "res://.godot/imported/SRSA1_file239.png-657714666d10e9d7c28fac5de4796054.etc2.ctex"]
 
 [params]
 

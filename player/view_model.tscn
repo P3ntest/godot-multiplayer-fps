@@ -1,12 +1,147 @@
-[gd_scene load_steps=3 format=3 uid="uid://cpkkip450jgku"]
+[gd_scene load_steps=14 format=3 uid="uid://cpkkip450jgku"]
 
 [ext_resource type="PackedScene" uid="uid://d3pojbf8aqbx6" path="res://assets/srsa_sniper/SRSA1.glb" id="1_cg8dq"]
 [ext_resource type="Script" path="res://player/view_model.gd" id="1_kv4sj"]
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_ppu85"]
+viewport_path = NodePath("ScopeView")
+
+[sub_resource type="Animation" id="Animation_8fv0n"]
+resource_name = "shoot"
+length = 0.5
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("hand/weapon_parent")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.0333333, 1, 0, 0, 0.0134086, 0.433333, 1, 0, 0, 0)
+
+[sub_resource type="Animation" id="Animation_kmv82"]
+length = 0.001
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("hand")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.074, -0.1, -0.137)
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("hand/weapon_parent")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0)
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("hand/weapon_parent:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1.03333),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_qnpup"]
+resource_name = "scope"
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("hand")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, -0.0399552, -0.0805359)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("hand/weapon_parent:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n0aqm"]
+_data = {
+"RESET": SubResource("Animation_kmv82"),
+"scope": SubResource("Animation_qnpup"),
+"shoot": SubResource("Animation_8fv0n")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_w1h5r"]
+animation = &"RESET"
+
+[sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_m42sj"]
+xfade_time = 0.1
+input_0/name = "scope"
+input_0/auto_advance = false
+input_0/break_loop_at_end = false
+input_0/reset = true
+input_1/name = "unscope"
+input_1/auto_advance = false
+input_1/break_loop_at_end = false
+input_1/reset = true
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_pjgn6"]
+animation = &"scope"
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_yqhcd"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_n0yln"]
+animation = &"shoot"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_fxdsm"]
+graph_offset = Vector2(-312, -58.56)
+nodes/RESET/node = SubResource("AnimationNodeAnimation_w1h5r")
+nodes/RESET/position = Vector2(-110, 0)
+nodes/Scope/node = SubResource("AnimationNodeTransition_m42sj")
+nodes/Scope/position = Vector2(390, 60)
+nodes/Scope_anim/node = SubResource("AnimationNodeAnimation_pjgn6")
+nodes/Scope_anim/position = Vector2(230, -60)
+nodes/Shoot/node = SubResource("AnimationNodeOneShot_yqhcd")
+nodes/Shoot/position = Vector2(70, 60)
+nodes/Shoot_anim/node = SubResource("AnimationNodeAnimation_n0yln")
+nodes/Shoot_anim/position = Vector2(-80, 180)
+nodes/output/position = Vector2(550, 40)
+node_connections = [&"Scope", 0, &"Scope_anim", &"Scope", 1, &"Shoot", &"Shoot", 0, &"RESET", &"Shoot", 1, &"Shoot_anim", &"output", 0, &"Scope"]
+
 [node name="fps_rig" type="Node3D"]
 script = ExtResource("1_kv4sj")
 
-[node name="head_anchor" type="Node3D" parent="."]
+[node name="hand" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.074, -0.1, -0.137)
 
-[node name="SRSA12" parent="head_anchor" instance=ExtResource("1_cg8dq")]
+[node name="weapon_parent" type="Node3D" parent="hand"]
+
+[node name="SRSA12" parent="hand/weapon_parent" instance=ExtResource("1_cg8dq")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+
+[node name="Sprite3D" type="Sprite3D" parent="hand/weapon_parent/SRSA12"]
+transform = Transform3D(0.002, 0, 0, 0, 0.002, 0, 0, 0, 0.002, 0, 0.0255807, 0.0458827)
+double_sided = false
+texture = SubResource("ViewportTexture_ppu85")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_n0aqm")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeBlendTree_fxdsm")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Scope/current_state = "unscope"
+parameters/Scope/transition_request = ""
+parameters/Scope/current_index = 1
+parameters/Shoot/active = false
+parameters/Shoot/internal_active = false
+parameters/Shoot/request = 0
+
+[node name="ScopeView" type="SubViewport" parent="."]
+render_target_update_mode = 4

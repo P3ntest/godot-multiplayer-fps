@@ -1,8 +1,6 @@
 # multiplayer.gd
 extends Node
 
-const PORT = 4433
-
 @export var player_scene : PackedScene
 
 func _ready():
@@ -40,7 +38,7 @@ const PLAYER_COLORS = [
 func _on_host_pressed():
 	# Start as server.
 	var peer = ENetMultiplayerPeer.new()
-	peer.create_server(PORT)
+	peer.create_server(int($Control/Net/Host/Port.text))
 	# if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 	# 	OS.alert("Failed to start multiplayer server.")
 	# 	return
@@ -64,9 +62,9 @@ func _add_player(id = 1):
 
 func _on_connect_pressed():
 	# Start as client.
-	var txt : String = $Control/Net/Options/Remote.text
+	var txt : String = $Control/Net/Connect/Remote.text
 	var peer = ENetMultiplayerPeer.new()
-	peer.create_client(txt, PORT)
+	peer.create_client(txt, int($Control/Net/Host/Port.text))
 	multiplayer.multiplayer_peer = peer
 	print("Client started.")
 	get_window().title = "Client"

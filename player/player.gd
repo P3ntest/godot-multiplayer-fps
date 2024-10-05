@@ -91,8 +91,12 @@ func on_hit_me(by_peer_id: int):
 	if health <= 0:
 		die_local()
 
+@onready var view_model_anim_tree: AnimationTree = $Head/Camera3D/view_model_camera/AnimationTree
+
 func shoot():
 	on_shot.rpc()
+
+	view_model_anim_tree.set("parameters/Shoot/request", 1)
 
 	if (player_raycast.is_colliding()):
 		print("hit player")
@@ -144,6 +148,13 @@ func _physics_process(delta: float) -> void:
 	if (Input.is_action_just_pressed("fire") and shoot_cooldown <= 0):
 		shoot()
 		shoot_cooldown = 1
+	
+	var target_fov = 90
+	if (Input.is_action_pressed("ads")):
+		target_fov = 30
+		view_model_anim_tree.set("parameters/Scope/transition_request", "scope")
+	else:
+		view_model_anim_tree.set("parameters/Scope/transition_request", "unscope")
 
 	# Add the gravity.
 	if not is_on_floor():
@@ -206,6 +217,7 @@ func _physics_process(delta: float) -> void:
 				var target_post_jump_velocity = basis_dir * bhob_speed * 1.1
 				velocity.x = target_post_jump_velocity.x
 				velocity.z = target_post_jump_velocity.z
+				target_fov += 40
 		elif can_wall_jump:
 			wall_jump_cooldown = 0.4
 			cayote_time_wall = 0
@@ -219,6 +231,7 @@ func _physics_process(delta: float) -> void:
 
 			velocity += wall_push + hop_velocity
 			velocity.y = vertical_velocity.y
+			target_fov += 40
 
 	# head bobbing
 	if is_on_floor():
@@ -232,6 +245,11 @@ func _physics_process(delta: float) -> void:
 		head_bobbing_anim_tree.set("parameters/bob_trans/transition_request", "idle")
 
 
+	if (transform.origin.y < -30):
+		health = 0
+		die_local()
+
+	$Head/Camera3D.fov = lerp($Head/Camera3D.fov, float(target_fov), 15 * delta)
 	move_and_slide()
 
 	$Hud/Stats.text = "Speed: " + str( snapped(h_vec(velocity).length(), .01)) + "\n" + "Bhob-Speed: " + str(snapped(bhob_speed, .01) if can_bhop else "-") + "\n" + "Health: " + str(health)

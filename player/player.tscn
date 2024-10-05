@@ -114,7 +114,6 @@ shape = SubResource("CapsuleShape3D_8lubt")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
-fov = 90.0
 near = 0.001
 
 [node name="PlayerHitCast" type="RayCast3D" parent="Head/Camera3D"]
@@ -127,7 +126,6 @@ collide_with_bodies = false
 target_position = Vector3(0, 0, -1000)
 
 [node name="view_model_camera" parent="Head/Camera3D" instance=ExtResource("2_18a0a")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0742994, -0.0566131, -0.137094)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Head"]
 libraries = {
