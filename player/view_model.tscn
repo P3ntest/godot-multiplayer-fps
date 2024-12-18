@@ -6,17 +6,6 @@
 [sub_resource type="ViewportTexture" id="ViewportTexture_ppu85"]
 viewport_path = NodePath("ScopeView")
 
-[sub_resource type="Animation" id="Animation_8fv0n"]
-resource_name = "shoot"
-length = 0.5
-tracks/0/type = "position_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("hand/weapon_parent")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.0333333, 1, 0, 0, 0.0134086, 0.433333, 1, 0, 0, 0)
-
 [sub_resource type="Animation" id="Animation_kmv82"]
 length = 0.001
 tracks/0/type = "position_3d"
@@ -67,6 +56,17 @@ tracks/1/keys = {
 "update": 1,
 "values": [false]
 }
+
+[sub_resource type="Animation" id="Animation_8fv0n"]
+resource_name = "shoot"
+length = 0.5
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("hand/weapon_parent")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.0333333, 1, 0, 0, 0.0134086, 0.433333, 1, 0, 0, 0)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_n0aqm"]
 _data = {
